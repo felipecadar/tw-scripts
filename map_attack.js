@@ -1,4 +1,4 @@
-"use strict";
+javascript:"use strict";
 
 $(document).ready(function () {
 
@@ -94,12 +94,15 @@ $(document).ready(function () {
     let non_atackable = TWMap.non_attackable_players
     let players = TWMap.players
     let my_tribe = game_data.player.ally
+    let tribes = TWMap.allies
     let skip_tribe = []
     
     var target_list = []
+    var tgt_tribes = []
 
     const maxPts = parseInt(prompt("Pontuação Máxima (apenas números)", "200"))
     const maxDist = parseInt(prompt("Distancia Máxima (-1 = sem limite)", "-1"))
+
 
     for (var k in key) {
         if (key[k]) {
@@ -144,6 +147,12 @@ $(document).ready(function () {
             }
 
             target_list.push(tgt_village)
+
+            if (tribes[tgt_village.ally_id] != null){
+                if (!tgt_tribes.includes(tribes[tgt_village.ally_id].name)){
+                    tgt_tribes.push(tribes[tgt_village.ally_id].name)
+                }
+            }
             
             // if(target_list.length >= 3){
             //     break
@@ -152,7 +161,7 @@ $(document).ready(function () {
 
     }
 
-    let REALLY = confirm(`Achei ${target_list.length} alvos. Deseja atacar?`)
+    let REALLY = confirm(`Achei ${target_list.length} alvos. Inclui as tribos: \n -${tgt_tribes.join("\n - ")}. Deseja atacar?`)
 
     if (REALLY){
 
