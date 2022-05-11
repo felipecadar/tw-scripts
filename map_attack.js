@@ -99,6 +99,7 @@ $(document).ready(function () {
     
     var target_list = []
     var tgt_tribes = []
+    var tgt_tribes_str = []
 
     const maxPts = parseInt(prompt("Pontuação Máxima (apenas números)", "200"))
     const maxDist = parseInt(prompt("Distancia Máxima (-1 = sem limite)", "-1"))
@@ -149,8 +150,9 @@ $(document).ready(function () {
             target_list.push(tgt_village)
 
             if (tribes[tgt_village.ally_id] != null){
-                if (!tgt_tribes.includes(tribes[tgt_village.ally_id].name)){
-                    tgt_tribes.push(tribes[tgt_village.ally_id].name)
+                if (!tgt_tribes.includes(tgt_village.ally_id)){
+                    tgt_tribes.push(tgt_village.ally_id)
+                    tgt_tribes_str.push(tribes[tgt_village.ally_id].name + " id: " + tgt_village.ally_id)
                 }
             }
             
@@ -161,7 +163,7 @@ $(document).ready(function () {
 
     }
 
-    let REALLY = confirm(`Achei ${target_list.length} alvos. Inclui as tribos: \n -${tgt_tribes.join("\n - ")}. Deseja atacar?`)
+    let REALLY = confirm(`Achei ${target_list.length} alvos. Inclui as tribos: \n -${tgt_tribes_str.join("\n - ")}\n. Deseja atacar?`)
 
     if (REALLY){
 
