@@ -2,6 +2,10 @@ javascript:"use strict";
 
 $(document).ready(function () {
 
+    const attack_config = {
+        "spear":0,
+    }
+
     function delay(time) {
         return new Promise(resolve => setTimeout(resolve, time));
     }
@@ -95,15 +99,25 @@ $(document).ready(function () {
     let players = TWMap.players
     let my_tribe = game_data.player.ally
     let tribes = TWMap.allies
+    var commands = TWMap.commandIcons
     let skip_tribe = []
-    
+
     var target_list = []
     var tgt_tribes = []
     var tgt_tribes_str = []
-
+    var under_attack = []
+    
+    for(village_id in commands){
+        for(cmd_idx in commands[village_id]){
+            let cmd = commands[village_id][cmd_idx]
+            if (cmd.img == "attack"){
+                under_attack.push(TWMap.villageKey[village_id])
+            }
+        }
+    }
+    
     const maxPts = parseInt(prompt("Pontuação Máxima (apenas números)", "200"))
     const maxDist = parseInt(prompt("Distancia Máxima (-1 = sem limite)", "-1"))
-
 
     for (var k in key) {
         if (key[k]) {
@@ -134,6 +148,11 @@ $(document).ready(function () {
 
             // Skip non atackable
             if (non_atackable.includes(tgt_village.owner)) {
+                continue
+            }
+
+            // Skip under my atack
+            if (under_attack.includes(tgt_village.xy)) {
                 continue
             }
 
