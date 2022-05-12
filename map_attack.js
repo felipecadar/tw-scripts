@@ -27,7 +27,7 @@ $(document).ready(function () {
         unit_input_sword.value = 0
         unit_input_axe.value = 0
         unit_input_spy.value = 10
-        unit_input_light.value = 0
+        unit_input_light.value = 10
         unit_input_heavy.value = 0
         unit_input_ram.value = 0
         unit_input_catapult.value = 0
@@ -99,7 +99,7 @@ $(document).ready(function () {
     let players = TWMap.players
     let my_tribe = game_data.player.ally
     let tribes = TWMap.allies
-    var commands = TWMap.commandIcons
+    let commands = TWMap.commandIcons
     let skip_tribe = []
 
     var target_list = []
@@ -107,6 +107,14 @@ $(document).ready(function () {
     var tgt_tribes_str = []
     var under_attack = []
     
+    for(idx in TWMap.allyRelations){
+        let data = TWMap.allyRelations[idx]
+        if (data == "partner"){
+            // console.log(`Skipping ${idx}`)
+            skip_tribe.push(idx)
+        }
+    }
+
     for(village_id in commands){
         for(cmd_idx in commands[village_id]){
             let cmd = commands[village_id][cmd_idx]
