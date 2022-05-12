@@ -107,7 +107,7 @@ $(document).ready(function () {
     var tgt_tribes_str = []
     var under_attack = []
     
-    for(idx in TWMap.allyRelations){
+    for(var idx in TWMap.allyRelations){
         let data = TWMap.allyRelations[idx]
         if (data == "partner"){
             // console.log(`Skipping ${idx}`)
@@ -115,8 +115,8 @@ $(document).ready(function () {
         }
     }
 
-    for(village_id in commands){
-        for(cmd_idx in commands[village_id]){
+    for(var village_id in commands){
+        for(var cmd_idx in commands[village_id]){
             let cmd = commands[village_id][cmd_idx]
             if (cmd.img == "attack"){
                 under_attack.push(TWMap.villageKey[village_id])
