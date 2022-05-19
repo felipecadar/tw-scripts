@@ -19,8 +19,8 @@ $(document).ready(function () {
         "spear": 0,
         "sword": 0,
         "axe": 0,
-        "spy": 5,
-        "light": 10,
+        "spy": 10,
+        "light": 0,
         "heavy": 0,
         "ram": 0,
         "catapult": 0,
@@ -212,7 +212,7 @@ $(document).ready(function () {
                 continue
             }
 
-            if(tribes[tgt_village.ally_id] && parseInt(tribes[tgt_village.ally_id].points.split('.').join("")) >= 8*maxPts){
+            if(tribes[tgt_village.ally_id] && parseInt(tribes[tgt_village.ally_id].points.split('.').join("")) >= 4*maxPts){
                 continue
             }
 
@@ -226,7 +226,7 @@ $(document).ready(function () {
             if (tribes[tgt_village.ally_id] != null){
                 if (!tgt_tribes.includes(tgt_village.ally_id)){
                     tgt_tribes.push(tgt_village.ally_id)
-                    tgt_tribes_str.push(tribes[tgt_village.ally_id].name + " pts: " + tribes[tgt_village.ally_id].points + " id: " + tgt_village.ally_id)
+                    tgt_tribes_str.push(tribes[tgt_village.ally_id].name + "tribe pts: " + tribes[tgt_village.ally_id].points + " id: " + tgt_village.ally_id)
                 }
             }
             
