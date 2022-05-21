@@ -1,0 +1,60 @@
+Some of the World Data is made available for download. Update times vary depending on the server. Please limit downloads to once per hour - it is not updated more frequently. Any routine downloading should occur at random times within the hour - this helps limit traffic and keeps the data available for everyone to use.
+
+example URL to fetch the configuration for world 1:
+http://us1.tribalwars.us/interface.php?func=get_config
+
+Settings
+format: XML
+
+/interface.php?func=get_config
+/interface.php?func=get_building_info
+/interface.php?func=get_unit_info
+
+text files:
+entries delimited by a new line
+fields delimited by a comma
+data is encoded using the PHP function urlencode()
+
+Villages
+
+/map/village.txt.gz
+
+$village_id, $name, $x, $y, $player_id, $points, $rank
+
+Players
+
+/map/player.txt.gz
+
+$player_id, $name, $tribe_id, $villages, $points, $rank
+
+Player Profiles
+
+/map/profile.txt.gz
+
+$player_id, $birth_date, $gender, $location
+
+Tribes
+
+/map/ally.txt.gz
+
+$tribe_id, $name, $tag, $members, $villages, $points, $all_points, $rank
+
+Opponents Defeated
+
+/map/kill_all.txt.gz
+/map/kill_att.txt.gz
+/map/kill_def.txt.gz
+
+/map/kill_all_tribe.txt.gz
+/map/kill_att_tribe.txt.gz
+/map/kill_def_tribe.txt.gz
+
+
+$rank, $id, $score
+
+
+Conquer History
+
+/map/conquer.txt.gz
+
+$village_id, $unix_timestamp, $new_owner, $old_owner
