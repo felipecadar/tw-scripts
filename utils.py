@@ -45,6 +45,11 @@ def getLastFiles(root:str="./tw", world:str="br113"):
         "players": players_path,
     }
 
+def read_od(fpath):
+    players = []
+    od = []
+    a = np.loadtxt()    
+
 def read_villages(fpath):
     coords = []
     points = []
