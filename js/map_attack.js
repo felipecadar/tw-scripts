@@ -144,6 +144,7 @@ $(document).ready(function () {
     let tribes = TWMap.allies
     let commands = TWMap.commandIcons
     let skip_tribe = []
+    let reservations = TWMap.reservations
 
     var target_list = []
     var tgt_tribes = []
