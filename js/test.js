@@ -1,17 +1,3 @@
-function movingTime(fields){
-    return {
-        'spear':parseInt(18*fields*60000),
-        'sword':parseInt(22*fields*60000),
-        'axe':parseInt(18*fields*60000),
-        'spy':parseInt(9*fields*60000),
-        'light':parseInt(10*fields*60000),
-        'heavy':parseInt(11*fields*60000),
-        'catapult':parseInt(11*fields*60000),
-        'ram':parseInt(30*fields*60000),
-        'snob':parseInt(35*fields*60000),
-        'knight':parseInt(10*fields*60000),
-    }
-}
 
 
 function parseCoord(str){
@@ -23,7 +9,6 @@ function parseCoord(str){
 function calculateFiels(p1, p2){
     return Math.sqrt( Math.pow((p1[0]-p2[0]), 2) + Math.pow((p1[1]-p2[1]), 2) );
 }
-
 
 Date.prototype.addTime = function(ms) {
     this.setTime(this.getTime() + ms);
@@ -73,7 +58,7 @@ var exitTimeCell2 = exitTimeRow.insertCell(-1);
 
 const command_type = Place.confirmScreen.data.type
 
-exitTimeCell1.appendChild(document.createTextNode(`${command_type} at: `));
+exitTimeCell1.appendChild(document.createTextNode(`${command_type} in: `));
 exitTimeCell2.appendChild(document.createTextNode(''));
 
 var arriveTimeRow = tbodyRef.insertRow(-1);
@@ -87,9 +72,9 @@ var inputRow = tbodyRef.insertRow(-1)
 
 
 const now = new Date()
-var input_names = ["ano","mes","dia","hora","minuto","segundo","milisegundo", "bandeira"]
-var input_names_abr = {"ano":"Data","mes":"/","dia":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":", "bandeira": " Flag%:"}
-var input_names_def = {"ano":`${now.getFullYear()}`,"mes":`${now.getMonth()+1}`,"dia":`${now.getDate()}`,"hora":`${now.getHours()}`,"minuto":`${now.getMinutes()}`,"segundo":`${now.getSeconds()}`,"milisegundo":"000", "bandeira":"0"}
+var input_names = ["ano","mes","dia","hora","minuto","segundo","milisegundo"]
+var input_names_abr = {"ano":"Data","mes":"/","dia":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":"}
+var input_names_def = {"ano":`${now.getFullYear()}`,"mes":`${now.getMonth()+1}`,"dia":`${now.getDate()}`,"hora":`${now.getHours()}`,"minuto":`${now.getMinutes()}`,"segundo":`${now.getSeconds()}`,"milisegundo":"000"}
 
 var input_fields = {}
 var cell = inputRow.insertCell(-1)
@@ -163,7 +148,6 @@ function calculate(){
 
     const target = parseCoord(target_text.substring(target_text.length-12,target_text.length-5))
     const fields = calculateFiels(attacker, target)
-    const times = movingTime(fields)
 
 
     const ano = parseInt(input_fields['ano'].value)
@@ -173,24 +157,9 @@ function calculate(){
     const minuto = parseInt(input_fields['minuto'].value)
     const segundo = parseInt(input_fields['segundo'].value)
     const milisegundo = parseInt(input_fields['milisegundo'].value)
-    const flag = parseFloat(input_fields['bandeira'].value) / 100
 
     const arrival_time = new Date(ano, mes, dia, hora, minuto, segundo, milisegundo)
-
-    var max_time = 0
-    for (key in send_troops){
-        if (send_troops[key] > 0){
-            if(max_time < times[key]){
-                max_time = times[key]
-            }
-        }
-    }
-
-
-    max_time = strToMs(total_time_text)
-
-    console.log(getTimeString(max_time))
-
+    const max_time = strToMs(total_time_text)
 
     const exit_time = arrival_time.subTime(max_time)
 
