@@ -61,19 +61,6 @@ Date.prototype.str = function() {
     return `${this.getFullYear()}/${this.getMonth()+1}/${this.getDate()} - ${this.getHours()}:${this.getMinutes()}:${this.getSeconds()}:${this.getMilliseconds()}`
 }
 
-function getTimeString(ms){
-    const htoms = 1000*60*60
-    const mtoms = 1000*60
-    const stoms = 1000
-
-    const h = parseInt(ms/htoms)
-    const mi = parseInt((ms - (h*htoms))/ mtoms)
-    const s = parseInt((ms - (mi*mtoms) - (h*htoms))/ stoms)
-    const m = parseInt(ms - (mi*mtoms) - (h*htoms) - (s*stoms))
-
-    return `${h}h ${mi}m ${s}s, ${m}ms`
-}
-
 function strToDate(str){
     const abrev = ["jan.", "fev.", "mar." ,"abr." ,"maio" ,"jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."]
 
