@@ -1,3 +1,4 @@
+javascript:
 function movingTime(fields){
     return {
         'spear':parseInt(18*fields*60000),
@@ -10,6 +11,20 @@ function movingTime(fields){
         'ram':parseInt(30*fields*60000),
         'snob':parseInt(35*fields*60000),
         'knight':parseInt(10*fields*60000),
+    }
+}
+
+function strToMs(str){
+    const htoms = 1000*60*60
+    const mtoms = 1000*60
+    const stoms = 1000
+    var parts = str.split(":")
+
+    const sum = (parseInt(parts[0])*htoms) + (parseInt(parts[1])*mtoms) + (parseInt(parts[2])*stoms)
+    if (parts.length == 3){
+        return sum
+    }else{
+        return sum + parseInt(parts[3])
     }
 }
 
@@ -59,8 +74,38 @@ function getTimeString(ms){
     return `${h}h ${mi}m ${s}s, ${m}ms`
 }
 
-const defender_text = document.querySelector("#content_value > table > tbody > tr:nth-child(5) > td:nth-child(2) > span")
-const attacker_text = document.querySelector("#content_value > table > tbody > tr:nth-child(3) > td:nth-child(2) > span")
+function strToDate(str){
+    const abrev = ["jan.", "fev.", "mar." ,"abr." ,"maio" ,"jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."]
+
+    const parts = str.split(" ")
+    const month = abrev.indexOf(parts[0])
+    
+    const day = parseInt(parts[1])
+    const year = parseInt(parts[2])
+    const time = parts[4].split(":")
+    const h = parseInt(time[0])
+    const m = parseInt(time[1])
+    const s = parseInt(time[2])
+    const ms = parseInt(time[3])
+
+    var date = new Date()
+
+    date.setFullYear(year)
+    date.setMonth(month)
+    date.setDate(day)
+    date.setHours(h)
+    date.setMinutes(m)
+    date.setSeconds(s)
+    date.setMilliseconds(ms)
+    return date
+}   
+
+
+const defender_text = document.querySelector("#content_value > table > tbody > tr:nth-child(5) > td:nth-child(2) > span").textContent
+const attacker_text = document.querySelector("#content_value > table > tbody > tr:nth-child(3) > td:nth-child(2) > span").textContent
+const arrival_text = document.querySelector("#content_value > table > tbody > tr:nth-child(6) > td:nth-child(2)").textContent
+const arrival_in_text = document.querySelector("#content_value > table > tbody > tr:nth-child(7) > td:nth-child(2) > span").textContent
+
 
 const defender = parseCoord(defender_text.substring(defender_text.length-12,defender_text.length-5))
 const attacker = parseCoord(attacker_text.substring(attacker_text.length-12,attacker_text.length-5))
@@ -69,3 +114,23 @@ const fields = calculateFiels(attacker, defender)
 const times = movingTime(fields)
 
 const now = getDateNow()
+// const arrival = strToDate(arrival_text)
+
+const tbodyRef = document.querySelector("#content_value > table")
+for (key in times){
+    var arrival = strToDate(arrival_text)
+    arrival.addTime(times[key])
+
+    var row = tbodyRef.insertRow(-1)
+    var cell = row.insertCell(-1)
+
+    var text = document.createTextNode(arrival.str());
+    var img = UI.Image(`unit/unit_${key}.png`,"")[0]
+
+    cell.setAttribute("colspan", 5)
+    cell.appendChild(img)
+    cell.appendChild(text)
+
+
+}
+
