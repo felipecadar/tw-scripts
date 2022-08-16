@@ -1,17 +1,3 @@
-function movingTime(fields){
-    return {
-        'spear':parseInt(18*fields*60000),
-        'sword':parseInt(22*fields*60000),
-        'axe':parseInt(18*fields*60000),
-        'spy':parseInt(9*fields*60000),
-        'light':parseInt(10*fields*60000),
-        'heavy':parseInt(11*fields*60000),
-        'catapult':parseInt(11*fields*60000),
-        'ram':parseInt(30*fields*60000),
-        'snob':parseInt(35*fields*60000),
-        'knight':parseInt(10*fields*60000),
-    }
-}
 
 
 function parseCoord(str){
@@ -23,7 +9,6 @@ function parseCoord(str){
 function calculateFiels(p1, p2){
     return Math.sqrt( Math.pow((p1[0]-p2[0]), 2) + Math.pow((p1[1]-p2[1]), 2) );
 }
-
 
 Date.prototype.addTime = function(ms) {
     this.setTime(this.getTime() + ms);
@@ -73,7 +58,7 @@ var exitTimeCell2 = exitTimeRow.insertCell(-1);
 
 const command_type = Place.confirmScreen.data.type
 
-exitTimeCell1.appendChild(document.createTextNode(`${command_type} at: `));
+exitTimeCell1.appendChild(document.createTextNode(`${command_type} in: `));
 exitTimeCell2.appendChild(document.createTextNode(''));
 
 var arriveTimeRow = tbodyRef.insertRow(-1);
@@ -87,9 +72,9 @@ var inputRow = tbodyRef.insertRow(-1)
 
 
 const now = new Date()
-var input_names = ["ano","mes","dia","hora","minuto","segundo","milisegundo", "bandeira"]
-var input_names_abr = {"ano":"Data","mes":"/","dia":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":", "bandeira": " Flag%:"}
-var input_names_def = {"ano":`${now.getFullYear()}`,"mes":`${now.getMonth()+1}`,"dia":`${now.getDate()}`,"hora":`${now.getHours()}`,"minuto":`${now.getMinutes()}`,"segundo":`${now.getSeconds()}`,"milisegundo":"000", "bandeira":"0"}
+var input_names = ["ano","mes","dia","hora","minuto","segundo","milisegundo"]
+var input_names_abr = {"ano":"Data","mes":"/","dia":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":"}
+var input_names_def = {"ano":`${now.getFullYear()}`,"mes":`${now.getMonth()+1}`,"dia":`${now.getDate()}`,"hora":`${now.getHours()}`,"minuto":`${now.getMinutes()}`,"segundo":`${now.getSeconds()}`,"milisegundo":"000"}
 
 var input_fields = {}
 var cell = inputRow.insertCell(-1)
@@ -107,7 +92,7 @@ for (let index = 0; index < input_names.length; index++) {
     const len = cell.childNodes.length
 
     cell.childNodes[len-1].setAttribute("type", "text");
-    cell.childNodes[len-1].setAttribute('size', '1');
+    cell.childNodes[len-1].setAttribute('size', '3');
     cell.childNodes[len-1].setAttribute('value', input_names_def[element]);
 
     input_fields[element] = cell.childNodes[len-1]
@@ -137,21 +122,32 @@ function getTimeString(ms){
     return `${h}h ${mi}m ${s}s, ${m}ms`
 }
 
+function strToMs(str){
+    const htoms = 1000*60*60
+    const mtoms = 1000*60
+    const stoms = 1000
+    var parts = str.split(":")
+    return (parseInt(parts[0])*htoms) + (parseInt(parts[1])*mtoms) + (parseInt(parts[2])*stoms)
+}
+
 function calculate(){
     clearAll()
 
     const send_troops = getTroops()
     const attacker = parseCoord(game_data.village.coord)
     var target_text = ''
+    var total_time_text = ''
+    var arrival_element = null
     if(command_type == 'support'){
         target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
+        total_time_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
+        arrival_element = document.querySelector("#date_arrival > span")
     }else{
         target_text = document.querySelector("#command-data-form > div:nth-child(9) > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
     }
 
     const target = parseCoord(target_text.substring(target_text.length-12,target_text.length-5))
     const fields = calculateFiels(attacker, target)
-    const times = movingTime(fields)
 
 
     const ano = parseInt(input_fields['ano'].value)
@@ -161,31 +157,9 @@ function calculate(){
     const minuto = parseInt(input_fields['minuto'].value)
     const segundo = parseInt(input_fields['segundo'].value)
     const milisegundo = parseInt(input_fields['milisegundo'].value)
-    const flag = parseFloat(input_fields['bandeira'].value) / 100
 
     const arrival_time = new Date(ano, mes, dia, hora, minuto, segundo, milisegundo)
-
-    var max_time = 0
-    for (key in send_troops){
-        if (send_troops[key] > 0){
-            if(max_time < times[key]){
-                max_time = times[key]
-            }
-        }
-    }
-
-    if (command_type == 'support'){
-        if (send_troops['knight'] > 0){
-            max_time = 10*fields*60000 //palad
-        }
-
-        if (flag > 0){
-            max_time = max_time - parseInt((flag)*max_time)
-        }
-    }
-
-    console.log(getTimeString(max_time))
-
+    const max_time = strToMs(total_time_text)
 
     const exit_time = arrival_time.subTime(max_time)
 
@@ -203,6 +177,7 @@ function calculate(){
         var arrival_time_now = test_now.addTime(max_time)
         var estimates_arrival = new Date(exit_time.getTime() + max_time)
         arriveTimeCell2.textContent = estimates_arrival.str()
+        arrival_element.textContent = arrival_time_now.str()
 
     }
 
@@ -217,6 +192,6 @@ function calculate(){
     console.log("exit_time", exit_time)
     console.log("now_time", getDateNow())
 
-    var t=setInterval(updateTable,50);
+    var t=setInterval(updateTable,200);
     var t=setInterval(tryAttack,50);
 }
