@@ -1,4 +1,18 @@
 
+// ==UserScript==
+// @name         Attack Timer
+// @namespace    http://eucadar.com/tw-time/
+// @version      5.6
+// @description  Auto Attack on time!
+// @author       subaro98
+// @match        https://*.tribalwars.com.br/game.php?village=*&screen=place&try=confirm
+// @icon         none
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
 
 function parseCoord(str){
     var parts = str.split("|");
@@ -138,7 +152,7 @@ function calculate(){
     var target_text = ''
     var total_time_text = ''
     var arrival_element = null
-    if(game_data.features.Premium.active == False ){
+    if(game_data.features.Premium.active == false ){
         if(command_type == 'support'){
             target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
             total_time_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
@@ -149,22 +163,21 @@ function calculate(){
             arrival_element = document.querySelector("#date_arrival > span")
         }
     }else{
-        alert("Premiuns not working... I dont have it to test")
         if(command_type == 'support'){
-            target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
+            target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)").textContent
             total_time_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
             arrival_element = document.querySelector("#date_arrival > span")
         }else{ // TODO: DON'T FORGET TO CHECK THIS WITH PREMIUM
-            target_text = document.querySelector("#command-data-form > div:nth-child(9) > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
-            total_time_text = document.querySelector("#command-data-form > div:nth-child(11) > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
+            target_text = document.querySelector("#command-data-form > div:nth-child(10) > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)").textContent
+            total_time_text = document.querySelector("#command-data-form > div:nth-child(10) > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
             arrival_element = document.querySelector("#date_arrival > span")
         }
 
     }
         
-    console.log("target_text", target_text)
-    console.log("total_time_text", total_time_text)
-    console.log("arrival_element", arrival_element)
+    // console.log("target_text", target_text)
+    // console.log("total_time_text", total_time_text)
+    // console.log("arrival_element", arrival_element)
 
     const target = parseCoord(target_text.substring(target_text.length-12,target_text.length-5))
     var first_cal = true
@@ -216,10 +229,13 @@ function calculate(){
         }
     }
 
-    console.log("arrival_time", arrival_time)
-    console.log("exit_time", exit_time)
-    console.log("now_time", getDateNow())
+    // console.log("arrival_time", arrival_time)
+    // console.log("exit_time", exit_time)
+    // console.log("now_time", getDateNow())
 
     setInterval(updateTable,200);
-    setInterval(tryAttack,50);
+    setInterval(tryAttack,25);
 }
+
+
+})();
