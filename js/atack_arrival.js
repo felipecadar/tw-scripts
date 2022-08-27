@@ -86,8 +86,8 @@ var inputRow = tbodyRef.insertRow(-1)
 
 
 const now = new Date()
-var input_names = ["ano","mes","dia","hora","minuto","segundo","milisegundo"]
-var input_names_abr = {"ano":"Data","mes":"/","dia":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":"}
+var input_names = ["dia","mes","ano","hora","minuto","segundo","milisegundo"]
+var input_names_abr = {"dia":"Data","mes":"/","ano":"/","hora":"Hora","minuto":":","segundo":":","milisegundo":":"}
 var input_names_def = {"ano":`${now.getFullYear()}`,"mes":`${now.getMonth()+1}`,"dia":`${now.getDate()}`,"hora":`${now.getHours()}`,"minuto":`${now.getMinutes()}`,"segundo":`${now.getSeconds()}`,"milisegundo":"000"}
 
 var input_fields = {}
@@ -106,7 +106,11 @@ for (let index = 0; index < input_names.length; index++) {
     const len = cell.childNodes.length
 
     cell.childNodes[len-1].setAttribute("type", "text");
-    cell.childNodes[len-1].setAttribute('size', '3');
+    if (element == 'ano'){
+        cell.childNodes[len-1].setAttribute('size', '4');
+    }else{
+        cell.childNodes[len-1].setAttribute('size', '3');
+    }
     cell.childNodes[len-1].setAttribute('value', input_names_def[element]);
 
     input_fields[element] = cell.childNodes[len-1]
