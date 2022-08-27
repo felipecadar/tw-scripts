@@ -84,6 +84,15 @@ arriveTimeCell2.appendChild(document.createTextNode(''));
 
 var inputRow = tbodyRef.insertRow(-1)
 
+var leaveTimeRow = tbodyRef.insertRow(-1);
+var leaveTimeCell1 = leaveTimeRow.insertCell(-1);
+var leaveTimeCell2 = leaveTimeRow.insertCell(-1);
+
+leaveTimeCell1.appendChild(document.createTextNode('Leave at:'));
+leaveTimeCell2.appendChild(document.createTextNode(''));
+
+var inputRow = tbodyRef.insertRow(-1)
+
 
 const now = new Date()
 var input_names = ["dia","mes","ano","hora","minuto","segundo","milisegundo"]
@@ -191,6 +200,10 @@ function calculate(){
     const max_time = strToMs(total_time_text)
 
     const exit_time = arrival_time.subTime(max_time)
+    leaveTimeCell2.textContent = exit_time.str()
+
+    var estimates_arrival = new Date(exit_time.getTime() + max_time)
+    arriveTimeCell2.textContent = estimates_arrival.str()
 
     function updateTable(){
         var test_now = getDateNow()
@@ -202,10 +215,7 @@ function calculate(){
             exitTimeCell2.textContent = "Attacking..."
         }
 
-
         var arrival_time_now = test_now.addTime(max_time)
-        var estimates_arrival = new Date(exit_time.getTime() + max_time)
-        arriveTimeCell2.textContent = estimates_arrival.str()
         arrival_element.textContent = arrival_time_now.str()
 
     }
@@ -230,7 +240,7 @@ function calculate(){
     console.log("exit_time", exit_time)
     console.log("now_time", getDateNow())
 
-    setInterval(updateTable,200);
+    setInterval(updateTable,1000);
     setInterval(tryAttack,25);
 }
 
