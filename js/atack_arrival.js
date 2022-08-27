@@ -144,40 +144,33 @@ function strToMs(str){
     return (parseInt(parts[0])*htoms) + (parseInt(parts[1])*mtoms) + (parseInt(parts[2])*stoms)
 }
 
+function GetCellValues(str_cell) {
+    var table = document.querySelector("#command-data-form > div > table")
+    for (var r = 0, n = table.rows.length; r < n; r++) {
+        for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+            // alert(table.rows[r].cells[c].innerHTML);
+            if(table.rows[r].cells[c].innerHTML == str_cell){
+                return table.rows[r]
+            }
+        }
+    }
+}
+
 function calculate(){
     clearAll()
 
-    const send_troops = getTroops()
-    const attacker = parseCoord(game_data.village.coord)
+    const command_type = Place.confirmScreen.data.type
     var target_text = ''
     var total_time_text = ''
     var arrival_element = null
-    if(game_data.features.Premium.active == false ){
-        if(command_type == 'support'){
-            target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span").textContent
-            total_time_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
-            arrival_element = document.querySelector("#date_arrival > span")
-        }else{
-            target_text = document.querySelector("#command-data-form > div:nth-child(11) > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)").textContent
-            total_time_text = document.querySelector("#command-data-form > div:nth-child(11) > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
-            arrival_element = document.querySelector("#date_arrival > span")
-        }
-    }else{
-        if(command_type == 'support'){
-            target_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)").textContent
-            total_time_text = document.querySelector("#command-data-form > div > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
-            arrival_element = document.querySelector("#date_arrival > span")
-        }else{ // TODO: DON'T FORGET TO CHECK THIS WITH PREMIUM
-            target_text = document.querySelector("#command-data-form > div:nth-child(10) > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > a:nth-child(1)").textContent
-            total_time_text = document.querySelector("#command-data-form > div:nth-child(10) > table > tbody > tr:nth-child(4) > td:nth-child(2)").textContent
-            arrival_element = document.querySelector("#date_arrival > span")
-        }
+    
+    target_text = GetCellValues("Destino:").childNodes[1].textContent    
+    total_time_text = GetCellValues("Duração:").childNodes[1].textContent
+    arrival_element = document.querySelector("#date_arrival > span")
 
-    }
-        
-    // console.log("target_text", target_text)
-    // console.log("total_time_text", total_time_text)
-    // console.log("arrival_element", arrival_element)
+    console.log("target_text", target_text)
+    console.log("total_time_text", total_time_text)
+    console.log("arrival_element", arrival_element)
 
     const target = parseCoord(target_text.substring(target_text.length-12,target_text.length-5))
     var first_cal = true
@@ -229,9 +222,9 @@ function calculate(){
         }
     }
 
-    // console.log("arrival_time", arrival_time)
-    // console.log("exit_time", exit_time)
-    // console.log("now_time", getDateNow())
+    console.log("arrival_time", arrival_time)
+    console.log("exit_time", exit_time)
+    console.log("now_time", getDateNow())
 
     setInterval(updateTable,200);
     setInterval(tryAttack,25);
