@@ -36,65 +36,104 @@ async function getData(someURL, header=undefined){
     return parsed_data
 }
 
-const urls = {
-    'villages': {
-        url: window.location.origin + '/map/village.txt',
-        header: ['id', 'name', 'x', 'y', 'player', 'points', 'rank'],
-    },
-    'players': {
-        url: window.location.origin + '/map/player.txt',
-        header: ['id', 'name', 'ally', 'villages', 'points', 'rank'],
-    },
-    'allies': {
-        url: window.location.origin + '/map/ally.txt',
-        header: ['id', 'name', 'tag', 'members', 'villages', 'points', 'all_points', 'rank'],
-    },
-    'conquers': {
-        url: window.location.origin + '/map/conquer.txt',
-        header: ['village_id', 'unix_timestamp', 'new_owner', 'old_owner'],
-    },
-    'kill_att': {
-        url: window.location.origin + '/map/kill_att.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_def': {
-        url: window.location.origin + '/map/kill_def.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_sup': {
-        url: window.location.origin + '/map/kill_sup.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_all': {
-        url: window.location.origin + '/map/kill_all.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_att_tribe': {
-        url: window.location.origin + '/map/kill_att_tribe.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_def_tribe': {
-        url: window.location.origin + '/map/kill_def_tribe.txt',
-        header: ['rank', 'id', 'kills'],
-    },
-    'kill_all_tribe': {
-        url: window.location.origin + '/map/kill_all_tribe.txt',
-        header: ['rank', 'id', 'kills'],
+
+
+function getUnderAttack(){
+    let commands = TWMap.commandIcons
+    let under_attack = []
+    for(var village_id in commands){
+        for(var cmd_idx in commands[village_id]){
+            let cmd = commands[village_id][cmd_idx]
+            if (cmd.img == "attack"){
+                under_attack.push(village_id)
+                console.log
+            }
+        }
     }
-};
+    return under_attack
+}
 
+function getVillageByIds(infos){
+    let vbi = {}
+    for (let village of infos.villages){
+        vbi[village.id] = village
+    }
+    return vbi
+}
 
+async function fetchInfos(select = ['villages', 'players', 'allies']){
+    // Options
+    // villages, players, allies, conquers, kill_att, kill_def, kill_sup
+    // kill_all, kill_att_tribe, kill_def_tribe, kill_all_tribe
+    const urls = {
+        'villages': {
+            url: window.location.origin + '/map/village.txt',
+            header: ['id', 'name', 'x', 'y', 'player', 'points', 'rank'],
+        },
+        'players': {
+            url: window.location.origin + '/map/player.txt',
+            header: ['id', 'name', 'ally', 'villages', 'points', 'rank'],
+        },
+        'allies': {
+            url: window.location.origin + '/map/ally.txt',
+            header: ['id', 'name', 'tag', 'members', 'villages', 'points', 'all_points', 'rank'],
+        },
+        'conquers': {
+            url: window.location.origin + '/map/conquer.txt',
+            header: ['village_id', 'unix_timestamp', 'new_owner', 'old_owner'],
+        },
+        'kill_att': {
+            url: window.location.origin + '/map/kill_att.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_def': {
+            url: window.location.origin + '/map/kill_def.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_sup': {
+            url: window.location.origin + '/map/kill_sup.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_all': {
+            url: window.location.origin + '/map/kill_all.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_att_tribe': {
+            url: window.location.origin + '/map/kill_att_tribe.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_def_tribe': {
+            url: window.location.origin + '/map/kill_def_tribe.txt',
+            header: ['rank', 'id', 'kills'],
+        },
+        'kill_all_tribe': {
+            url: window.location.origin + '/map/kill_all_tribe.txt',
+            header: ['rank', 'id', 'kills'],
+        }
+    };
+    const infos = {};
+    for (const key of select) {
+        console.log(`Getting ${key}`)
+        const { url, header } = urls[key];
+        infos[key] = await getData(url, header);
+    }
+    return infos
+}
 
 
 (async function() {
     'use strict';
+    const isMapScreen = window.location.search.includes("screen=map");
 
-    const infos = {};
-    for (const key in urls) {
-        const { url, header } = urls[key];
-        infos[key] = await getData(url, header);
+    const infos = await fetchInfos()
+    const villagesById = getVillageByIds(infos)
+
+
+    if (isMapScreen){
+        const underAttack = getUnderAttack()
+
+        console.log(underAttack)
     }
-    console.log(infos)
 
 
 })()
