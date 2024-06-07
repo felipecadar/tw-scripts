@@ -65,6 +65,9 @@ class Player:
         self.center:ndarray = np.array([0,0])
 
     def getVillages(self, villages) -> List[Village]:
+        if len(self.villages) > 0:
+            return self.villages
+        
         self.villages = list(filter(lambda v: self.pid == v.pid, villages))
         self.villages = sorted(self.villages, key=lambda x: x.name)
         return self.villages
